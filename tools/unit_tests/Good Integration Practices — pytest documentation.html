@@ -1,0 +1,766 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0052)https://docs.pytest.org/en/latest/goodpractices.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    
+    <title>Good Integration Practices — pytest documentation</title>
+    <link rel="stylesheet" href="./Good Integration Practices — pytest documentation_files/flasky.css" type="text/css">
+    <link rel="stylesheet" href="./Good Integration Practices — pytest documentation_files/pygments.css" type="text/css">
+    <link rel="stylesheet" type="text/css" href="./Good Integration Practices — pytest documentation_files/badge_only.css">
+    <link rel="stylesheet" type="text/css" href="./Good Integration Practices — pytest documentation_files/pygments_pytest.css">
+    <script type="text/javascript" async="" src="./Good Integration Practices — pytest documentation_files/ga.js"></script><script async="" src="./Good Integration Practices — pytest documentation_files/analytics.js"></script><script type="text/javascript" id="documentation_options" data-url_root="./" src="./Good Integration Practices — pytest documentation_files/documentation_options.js"></script>
+    <script type="text/javascript" src="./Good Integration Practices — pytest documentation_files/jquery.js"></script>
+    <script type="text/javascript" src="./Good Integration Practices — pytest documentation_files/underscore.js"></script>
+    <script type="text/javascript" src="./Good Integration Practices — pytest documentation_files/doctools.js"></script>
+    <script type="text/javascript" src="./Good Integration Practices — pytest documentation_files/language_data.js"></script>
+    <script type="text/javascript" src="./Good Integration Practices — pytest documentation_files/readthedocs-doc-embed.js"></script>
+    <link rel="shortcut icon" href="https://docs.pytest.org/en/latest/_static/pytest1favi.ico">
+    <link rel="search" title="Search" href="https://docs.pytest.org/en/latest/search.html">
+    <link rel="next" title="Flaky tests" href="https://docs.pytest.org/en/latest/flaky.html">
+    <link rel="prev" title="Reference" href="https://docs.pytest.org/en/latest/reference.html">
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  
+<!-- RTD Extra Head -->
+
+<!-- 
+Always link to the latest version, as canonical.
+http://docs.readthedocs.org/en/latest/canonical.html
+-->
+<link rel="canonical" href="http://doc.pytest.org/en/latest/goodpractices.html">
+
+<link rel="stylesheet" href="./Good Integration Practices — pytest documentation_files/readthedocs-doc-embed.css" type="text/css">
+
+<script type="text/javascript" src="./Good Integration Practices — pytest documentation_files/readthedocs-data.js"></script>
+
+<!-- Add page-specific data, which must exist in the page js, not global -->
+<script type="text/javascript">
+READTHEDOCS_DATA['page'] = 'goodpractices'
+READTHEDOCS_DATA['source_suffix'] = '.rst'
+</script>
+
+<script type="text/javascript" src="./Good Integration Practices — pytest documentation_files/readthedocs-analytics.js"></script>
+
+<!-- end RTD <extrahead> -->
+</head><body>
+  
+  
+  
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="https://docs.pytest.org/en/latest/flaky.html" title="Flaky tests" accesskey="N">next</a></li>
+        <li class="right">
+          <a href="https://docs.pytest.org/en/latest/reference.html" title="Reference" accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="https://docs.pytest.org/en/latest/contents.html">pytest-4.1</a> »</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="good-integration-practices">
+<span id="goodpractices"></span><h1>Good Integration Practices<a class="headerlink" href="https://docs.pytest.org/en/latest/goodpractices.html#good-integration-practices" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="install-package-with-pip">
+<h2>Install package with pip<a class="headerlink" href="https://docs.pytest.org/en/latest/goodpractices.html#install-package-with-pip" title="Permalink to this headline">¶</a></h2>
+<p>For development, we recommend to use <a class="reference external" href="https://pypi.org/project/virtualenv/">virtualenv</a> environments and <a class="reference external" href="https://pypi.org/project/pip/">pip</a>
+for installing your application and any dependencies
+as well as the <code class="docutils literal notranslate"><span class="pre">pytest</span></code> package itself. This ensures your code and
+dependencies are isolated from the system Python installation.</p>
+<p>First you need to place a <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file in the root of your package with the following minimum content:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">find_packages</span>
+
+<span class="n">setup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"PACKAGENAME"</span><span class="p">,</span> <span class="n">packages</span><span class="o">=</span><span class="n">find_packages</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">PACKAGENAME</span></code> is the name of your package. You can then install your package in “editable” mode by running from the same directory:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>which lets you change your source code (both tests and application) and rerun tests at will.
+This is similar to running <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">develop</span></code> or <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">develop</span></code> in that it installs
+your package using a symlink to your development code.</p>
+</div>
+<div class="section" id="conventions-for-python-test-discovery">
+<span id="python-test-discovery"></span><span id="test-discovery"></span><h2>Conventions for Python test discovery<a class="headerlink" href="https://docs.pytest.org/en/latest/goodpractices.html#conventions-for-python-test-discovery" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> implements the following standard test discovery:</p>
+<ul class="simple">
+<li>If no arguments are specified then collection starts from <a class="reference internal" href="https://docs.pytest.org/en/latest/reference.html#confval-testpaths"><code class="xref std std-confval docutils literal notranslate"><span class="pre">testpaths</span></code></a>
+(if configured) or the current directory. Alternatively, command line arguments
+can be used in any combination of directories, file names or node ids.</li>
+<li>Recurse into directories, unless they match <a class="reference internal" href="https://docs.pytest.org/en/latest/reference.html#confval-norecursedirs"><code class="xref std std-confval docutils literal notranslate"><span class="pre">norecursedirs</span></code></a>.</li>
+<li>In those directories, search for <code class="docutils literal notranslate"><span class="pre">test_*.py</span></code> or <code class="docutils literal notranslate"><span class="pre">*_test.py</span></code> files, imported by their <a class="reference internal" href="https://docs.pytest.org/en/latest/goodpractices.html#test-package-name">test package name</a>.</li>
+<li>From those files, collect test items:<ul>
+<li><code class="docutils literal notranslate"><span class="pre">test_</span></code> prefixed test functions or methods outside of class</li>
+<li><code class="docutils literal notranslate"><span class="pre">test_</span></code> prefixed test functions or methods inside <code class="docutils literal notranslate"><span class="pre">Test</span></code> prefixed test classes (without an <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method)</li>
+</ul>
+</li>
+</ul>
+<p>For examples of how to customize your test discovery <a class="reference internal" href="https://docs.pytest.org/en/latest/example/pythoncollection.html"><span class="doc">Changing standard (Python) test discovery</span></a>.</p>
+<p>Within Python modules, <code class="docutils literal notranslate"><span class="pre">pytest</span></code> also discovers tests using the standard
+<a class="reference internal" href="https://docs.pytest.org/en/latest/unittest.html#unittest-testcase"><span class="std std-ref">unittest.TestCase</span></a> subclassing technique.</p>
+</div>
+<div class="section" id="choosing-a-test-layout-import-rules">
+<h2>Choosing a test layout / import rules<a class="headerlink" href="https://docs.pytest.org/en/latest/goodpractices.html#choosing-a-test-layout-import-rules" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> supports two common test layouts:</p>
+<div class="section" id="tests-outside-application-code">
+<h3>Tests outside application code<a class="headerlink" href="https://docs.pytest.org/en/latest/goodpractices.html#tests-outside-application-code" title="Permalink to this headline">¶</a></h3>
+<p>Putting tests into an extra directory outside your actual application code
+might be useful if you have many functional tests or for other reasons want
+to keep tests separate from actual application code (often a good idea):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">setup</span><span class="o">.</span><span class="n">py</span>
+<span class="n">mypkg</span><span class="o">/</span>
+    <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">view</span><span class="o">.</span><span class="n">py</span>
+<span class="n">tests</span><span class="o">/</span>
+    <span class="n">test_app</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">test_view</span><span class="o">.</span><span class="n">py</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>This has the following benefits:</p>
+<ul class="simple">
+<li>Your tests can run against an installed version after executing <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code>.</li>
+<li>Your tests can run against the local copy with an editable install after executing <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--editable</span> <span class="pre">.</span></code>.</li>
+<li>If you don’t have a <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file and are relying on the fact that Python by default puts the current
+directory in <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> to import your package, you can execute <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code> to execute the tests against the
+local copy directly, without using <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">See <a class="reference internal" href="https://docs.pytest.org/en/latest/pythonpath.html#pythonpath"><span class="std std-ref">pytest import mechanisms and sys.path/PYTHONPATH</span></a> for more information about the difference between calling <code class="docutils literal notranslate"><span class="pre">pytest</span></code> and
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code>.</p>
+</div>
+<p>Note that using this scheme your test files must have <strong>unique names</strong>, because
+<code class="docutils literal notranslate"><span class="pre">pytest</span></code> will import them as <em>top-level</em> modules since there are no packages
+to derive a full package name from. In other words, the test files in the example above will
+be imported as <code class="docutils literal notranslate"><span class="pre">test_app</span></code> and <code class="docutils literal notranslate"><span class="pre">test_view</span></code> top-level modules by adding <code class="docutils literal notranslate"><span class="pre">tests/</span></code> to
+<code class="docutils literal notranslate"><span class="pre">sys.path</span></code>.</p>
+<p>If you need to have test modules with the same name, you might add <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> files to your
+<code class="docutils literal notranslate"><span class="pre">tests</span></code> folder and subfolders, changing them to packages:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">setup</span><span class="o">.</span><span class="n">py</span>
+<span class="n">mypkg</span><span class="o">/</span>
+    <span class="o">...</span>
+<span class="n">tests</span><span class="o">/</span>
+    <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">foo</span><span class="o">/</span>
+        <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">test_view</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">bar</span><span class="o">/</span>
+        <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">test_view</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>Now pytest will load the modules as <code class="docutils literal notranslate"><span class="pre">tests.foo.test_view</span></code> and <code class="docutils literal notranslate"><span class="pre">tests.bar.test_view</span></code>, allowing
+you to have modules with the same name. But now this introduces a subtle problem: in order to load
+the test modules from the <code class="docutils literal notranslate"><span class="pre">tests</span></code> directory, pytest prepends the root of the repository to
+<code class="docutils literal notranslate"><span class="pre">sys.path</span></code>, which adds the side-effect that now <code class="docutils literal notranslate"><span class="pre">mypkg</span></code> is also importable.
+This is problematic if you are using a tool like <a class="reference external" href="http://testrun.org/tox">tox</a> to test your package in a virtual environment,
+because you want to test the <em>installed</em> version of your package, not the local code from the repository.</p>
+<p>In this situation, it is <strong>strongly</strong> suggested to use a <code class="docutils literal notranslate"><span class="pre">src</span></code> layout where application root package resides in a
+sub-directory of your root:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">setup</span><span class="o">.</span><span class="n">py</span>
+<span class="n">src</span><span class="o">/</span>
+    <span class="n">mypkg</span><span class="o">/</span>
+        <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">view</span><span class="o">.</span><span class="n">py</span>
+<span class="n">tests</span><span class="o">/</span>
+    <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">foo</span><span class="o">/</span>
+        <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">test_view</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">bar</span><span class="o">/</span>
+        <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">test_view</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>This layout prevents a lot of common pitfalls and has many benefits, which are better explained in this excellent
+<a class="reference external" href="https://blog.ionelmc.ro/2014/05/25/python-packaging/#the-structure">blog post by Ionel Cristian Mărieș</a>.</p>
+</div>
+<div class="section" id="tests-as-part-of-application-code">
+<h3>Tests as part of application code<a class="headerlink" href="https://docs.pytest.org/en/latest/goodpractices.html#tests-as-part-of-application-code" title="Permalink to this headline">¶</a></h3>
+<p>Inlining test directories into your application package
+is useful if you have direct relation between tests and application modules and
+want to distribute them along with your application:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">setup</span><span class="o">.</span><span class="n">py</span>
+<span class="n">mypkg</span><span class="o">/</span>
+    <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">view</span><span class="o">.</span><span class="n">py</span>
+    <span class="n">test</span><span class="o">/</span>
+        <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">test_app</span><span class="o">.</span><span class="n">py</span>
+        <span class="n">test_view</span><span class="o">.</span><span class="n">py</span>
+        <span class="o">...</span>
+</pre></div>
+</div>
+<p>In this scheme, it is easy to run your tests using the <code class="docutils literal notranslate"><span class="pre">--pyargs</span></code> option:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="o">--</span><span class="n">pyargs</span> <span class="n">mypkg</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> will discover where <code class="docutils literal notranslate"><span class="pre">mypkg</span></code> is installed and collect tests from there.</p>
+<p>Note that this layout also works in conjunction with the <code class="docutils literal notranslate"><span class="pre">src</span></code> layout mentioned in the previous section.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can use Python3 namespace packages (PEP420) for your application
+but pytest will still perform <a class="reference internal" href="https://docs.pytest.org/en/latest/goodpractices.html#test-package-name">test package name</a> discovery based on the
+presence of <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> files.  If you use one of the
+two recommended file system layouts above but leave away the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>
+files from your directories it should just work on Python3.3 and above.  From
+“inlined tests”, however, you will need to use absolute imports for
+getting at your application code.</p>
+</div>
+<div class="admonition note" id="test-package-name">
+<p class="first admonition-title">Note</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">pytest</span></code> finds an “a/b/test_module.py” test file while
+recursing into the filesystem it determines the import name
+as follows:</p>
+<ul class="simple">
+<li>determine <code class="docutils literal notranslate"><span class="pre">basedir</span></code>: this is the first “upward” (towards the root)
+directory not containing an <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>.  If e.g. both <code class="docutils literal notranslate"><span class="pre">a</span></code>
+and <code class="docutils literal notranslate"><span class="pre">b</span></code> contain an <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file then the parent directory
+of <code class="docutils literal notranslate"><span class="pre">a</span></code> will become the <code class="docutils literal notranslate"><span class="pre">basedir</span></code>.</li>
+<li>perform <code class="docutils literal notranslate"><span class="pre">sys.path.insert(0,</span> <span class="pre">basedir)</span></code> to make the test module
+importable under the fully qualified import name.</li>
+<li><code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">a.b.test_module</span></code> where the path is determined
+by converting path separators <code class="docutils literal notranslate"><span class="pre">/</span></code> into “.” characters.  This means
+you must follow the convention of having directory and file
+names map directly to the import names.</li>
+</ul>
+<p class="last">The reason for this somewhat evolved importing technique is
+that in larger projects multiple test modules might import
+from each other and thus deriving a canonical import name helps
+to avoid surprises such as a test module getting imported twice.</p>
+</div>
+</div>
+</div>
+<div class="section" id="tox">
+<span id="use-tox"></span><h2>tox<a class="headerlink" href="https://docs.pytest.org/en/latest/goodpractices.html#tox" title="Permalink to this headline">¶</a></h2>
+<p>Once you are done with your work and want to make sure that your actual
+package passes all tests you may want to look into <a class="reference external" href="http://testrun.org/tox">tox</a>, the
+virtualenv test automation tool and its <a class="reference external" href="https://tox.readthedocs.io/en/latest/example/pytest.html">pytest support</a>.
+tox helps you to setup virtualenv environments with pre-defined
+dependencies and then executing a pre-configured test command with
+options.  It will run tests against the installed package and not
+against your source code checkout, helping to detect packaging
+glitches.</p>
+</div>
+<div class="section" id="integrating-with-setuptools-python-setup-py-test-pytest-runner">
+<h2>Integrating with setuptools / <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">test</span></code> / <code class="docutils literal notranslate"><span class="pre">pytest-runner</span></code><a class="headerlink" href="https://docs.pytest.org/en/latest/goodpractices.html#integrating-with-setuptools-python-setup-py-test-pytest-runner" title="Permalink to this headline">¶</a></h2>
+<p>You can integrate test runs into your setuptools based project
+with the <a class="reference external" href="https://pypi.org/project/pytest-runner/">pytest-runner</a> plugin.</p>
+<p>Add this to <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="c1"># ...,</span>
+    <span class="n">setup_requires</span><span class="o">=</span><span class="p">[</span><span class="s2">"pytest-runner"</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="n">tests_require</span><span class="o">=</span><span class="p">[</span><span class="s2">"pytest"</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="c1"># ...,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>And create an alias into <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code> file:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[aliases]</span>
+<span class="na">test</span><span class="o">=</span><span class="s">pytest</span>
+</pre></div>
+</div>
+<p>If you now type:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span>
+</pre></div>
+</div>
+<p>this will execute your tests using <code class="docutils literal notranslate"><span class="pre">pytest-runner</span></code>. As this is a
+standalone version of <code class="docutils literal notranslate"><span class="pre">pytest</span></code> no prior installation whatsoever is
+required for calling the test command. You can also pass additional
+arguments to pytest such as your test directory or other
+options using <code class="docutils literal notranslate"><span class="pre">--addopts</span></code>.</p>
+<p>You can also specify other pytest-ini options in your <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code> file
+by putting them into a <code class="docutils literal notranslate"><span class="pre">[tool:pytest]</span></code> section:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[tool:pytest]</span>
+<span class="na">addopts</span> <span class="o">=</span> <span class="s">--verbose</span>
+<span class="na">python_files</span> <span class="o">=</span> <span class="s">testing/*/*.py</span>
+</pre></div>
+</div>
+<div class="section" id="manual-integration">
+<h3>Manual Integration<a class="headerlink" href="https://docs.pytest.org/en/latest/goodpractices.html#manual-integration" title="Permalink to this headline">¶</a></h3>
+<p>If for some reason you don’t want/can’t use <code class="docutils literal notranslate"><span class="pre">pytest-runner</span></code>, you can write
+your own setuptools Test command for invoking pytest.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">setuptools.command.test</span> <span class="kn">import</span> <span class="n">test</span> <span class="k">as</span> <span class="n">TestCommand</span>
+
+
+<span class="k">class</span> <span class="nc">PyTest</span><span class="p">(</span><span class="n">TestCommand</span><span class="p">):</span>
+    <span class="n">user_options</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">"pytest-args="</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">,</span> <span class="s2">"Arguments to pass to pytest"</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">initialize_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">TestCommand</span><span class="o">.</span><span class="n">initialize_options</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pytest_args</span> <span class="o">=</span> <span class="s2">""</span>
+
+    <span class="k">def</span> <span class="nf">run_tests</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">shlex</span>
+
+        <span class="c1"># import here, cause outside the eggs aren't loaded</span>
+        <span class="kn">import</span> <span class="nn">pytest</span>
+
+        <span class="n">errno</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pytest_args</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">errno</span><span class="p">)</span>
+
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="c1"># ...,</span>
+    <span class="n">tests_require</span><span class="o">=</span><span class="p">[</span><span class="s2">"pytest"</span><span class="p">],</span>
+    <span class="n">cmdclass</span><span class="o">=</span><span class="p">{</span><span class="s2">"pytest"</span><span class="p">:</span> <span class="n">PyTest</span><span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Now if you run:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span>
+</pre></div>
+</div>
+<p>this will download <code class="docutils literal notranslate"><span class="pre">pytest</span></code> if needed and then run your tests
+as you would expect it to. You can pass a single string of arguments
+using the <code class="docutils literal notranslate"><span class="pre">--pytest-args</span></code> or <code class="docutils literal notranslate"><span class="pre">-a</span></code> command-line option. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span> <span class="o">-</span><span class="n">a</span> <span class="s2">"--durations=5"</span>
+</pre></div>
+</div>
+<p>is equivalent to running <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">--durations=5</span></code>.</p>
+</div>
+</div>
+</div>
+
+
+          <div id="rtd-l5qsmslg" class="ethical-alabaster"><hr><div class="ethical-footer"><div class="ethical-content"><a href="https://readthedocs.org/sustainability/click/162/wQWF7D35xgwD/" rel="nofollow" target="_blank" class="ethical-image-link"><img src="./Good Integration Practices — pytest documentation_files/triplebyte-2.png"></a><div class="ethical-text"><b>Triplebyte now hires software engineers for top tech companies and hundreds of the most exciting startups.</b> We identify your strengths from our <a href="https://readthedocs.org/sustainability/click/162/wQWF7D35xgwD/" rel="nofollow" target="_blank">online coding quiz</a> and let you skip resume and recruiter screens at multiple companies at once. It's free, confidential, and background-blind.</div></div><div class="ethical-callout"><small><em><a href="https://readthedocs.org/sustainability/advertising/">Sponsored</a><span> · </span><a href="https://docs.readthedocs.io/en/latest/ethical-advertising.html">Ads served ethically</a></em></small></div></div><img src="./Good Integration Practices — pytest documentation_files/saved_resource" style="display: none;"></div><hr></div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="https://docs.pytest.org/en/latest/contents.html">
+              <img class="logo" src="./Good Integration Practices — pytest documentation_files/pytest1.png" alt="Logo">
+            </a></p><h3><a href="https://docs.pytest.org/en/latest/contents.html">Table Of Contents</a></h3>
+
+<ul>
+  <li><a href="https://docs.pytest.org/en/latest/index.html">Home</a></li>
+  <li><a href="https://docs.pytest.org/en/latest/getting-started.html">Install</a></li>
+  <li><a href="https://docs.pytest.org/en/latest/contents.html">Contents</a></li>
+  <li><a href="https://docs.pytest.org/en/latest/reference.html">Reference</a></li>
+  <li><a href="https://docs.pytest.org/en/latest/example/index.html">Examples</a></li>
+  <li><a href="https://docs.pytest.org/en/latest/customize.html">Customize</a></li>
+  <li><a href="https://docs.pytest.org/en/latest/changelog.html">Changelog</a></li>
+  <li><a href="https://docs.pytest.org/en/latest/contributing.html">Contributing</a></li>
+  <li><a href="https://docs.pytest.org/en/latest/backwards-compatibility.html">Backwards Compatibility</a></li>
+  <li><a href="https://docs.pytest.org/en/latest/license.html">License</a></li>
+  <li><a href="https://docs.pytest.org/en/latest/contact.html">Contact Channels</a></li>
+</ul>
+  <hr>
+  <ul>
+<li><a class="reference internal" href="https://docs.pytest.org/en/latest/goodpractices.html#">Good Integration Practices</a><ul>
+<li><a class="reference internal" href="https://docs.pytest.org/en/latest/goodpractices.html#install-package-with-pip">Install package with pip</a></li>
+<li><a class="reference internal" href="https://docs.pytest.org/en/latest/goodpractices.html#conventions-for-python-test-discovery">Conventions for Python test discovery</a></li>
+<li><a class="reference internal" href="https://docs.pytest.org/en/latest/goodpractices.html#choosing-a-test-layout-import-rules">Choosing a test layout / import rules</a><ul>
+<li><a class="reference internal" href="https://docs.pytest.org/en/latest/goodpractices.html#tests-outside-application-code">Tests outside application code</a></li>
+<li><a class="reference internal" href="https://docs.pytest.org/en/latest/goodpractices.html#tests-as-part-of-application-code">Tests as part of application code</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="https://docs.pytest.org/en/latest/goodpractices.html#tox">tox</a></li>
+<li><a class="reference internal" href="https://docs.pytest.org/en/latest/goodpractices.html#integrating-with-setuptools-python-setup-py-test-pytest-runner">Integrating with setuptools / <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">test</span></code> / <code class="docutils literal notranslate"><span class="pre">pytest-runner</span></code></a><ul>
+<li><a class="reference internal" href="https://docs.pytest.org/en/latest/goodpractices.html#manual-integration">Manual Integration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="https://docs.pytest.org/en/latest/contents.html">Documentation overview</a><ul>
+      <li>Previous: <a href="https://docs.pytest.org/en/latest/reference.html" title="previous chapter">Reference</a></li>
+      <li>Next: <a href="https://docs.pytest.org/en/latest/flaky.html" title="next chapter">Flaky tests</a></li>
+  </ul></li>
+</ul><h3>Useful Links</h3>
+<ul>
+  <li><a href="https://pypi.org/project/pytest/">pytest @ PyPI</a></li>
+  <li><a href="https://github.com/pytest-dev/pytest/">pytest @ GitHub</a></li>
+  <li><a href="http://plugincompat.herokuapp.com/">3rd party plugins</a></li>
+  <li><a href="https://github.com/pytest-dev/pytest/issues">Issue Tracker</a></li>
+  <li><a href="https://media.readthedocs.org/pdf/pytest/latest/pytest.pdf">PDF Documentation</a>
+</li></ul>
+<div id="searchbox" style="" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="https://docs.pytest.org/en/latest/search.html" method="get">
+      <input type="text" name="q">
+      <input type="submit" value="Go">
+      <input type="hidden" name="check_keywords" value="yes">
+      <input type="hidden" name="area" value="default">
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        <div id="rtd-sgirwuri" class="ethical-alabaster"></div></div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+  <div class="footer">
+    © Copyright 2015–2019 , holger krekel and pytest-dev team.
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-7597274-13']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  
+<!-- Inserted RTD Footer -->
+<div class="injected">
+
+  
+  <div class="rst-versions rst-badge" data-toggle="rst-versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book">&nbsp;</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      
+
+      
+      
+      
+      <dl>
+        <dt>Versions</dt>
+        
+         <strong> 
+        <dd><a href="http://doc.pytest.org/en/latest/goodpractices.html">latest</a></dd>
+         </strong> 
+        
+        
+        <dd><a href="http://doc.pytest.org/en/stable/goodpractices.html">stable</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/4.1.1/goodpractices.html">4.1.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/4.1.0/goodpractices.html">4.1.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/4.0.2/goodpractices.html">4.0.2</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/4.0.1/goodpractices.html">4.0.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/4.0.0/goodpractices.html">4.0.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.10.1/goodpractices.html">3.10.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.10.0/goodpractices.html">3.10.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.9.3/goodpractices.html">3.9.3</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.9.2/goodpractices.html">3.9.2</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.9.1/goodpractices.html">3.9.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.9.0/goodpractices.html">3.9.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.8.2/goodpractices.html">3.8.2</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.8.1/goodpractices.html">3.8.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.8.0/goodpractices.html">3.8.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.7.4/goodpractices.html">3.7.4</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.7.3/goodpractices.html">3.7.3</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.7.2/goodpractices.html">3.7.2</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.7.1/goodpractices.html">3.7.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.7.0/goodpractices.html">3.7.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.6.4/goodpractices.html">3.6.4</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.6.3/goodpractices.html">3.6.3</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.6.2/goodpractices.html">3.6.2</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.6.1/goodpractices.html">3.6.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.6.0/goodpractices.html">3.6.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.5.1/goodpractices.html">3.5.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.5.0/goodpractices.html">3.5.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.4.2/goodpractices.html">3.4.2</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.4.1/goodpractices.html">3.4.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.4.0/goodpractices.html">3.4.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.3.2/goodpractices.html">3.3.2</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.3.1/goodpractices.html">3.3.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.3.0/goodpractices.html">3.3.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.2.5/goodpractices.html">3.2.5</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.2.4/goodpractices.html">3.2.4</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.2.3/goodpractices.html">3.2.3</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.2.2/goodpractices.html">3.2.2</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.2.1/goodpractices.html">3.2.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.2.0/goodpractices.html">3.2.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.1.3/goodpractices.html">3.1.3</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.1.2/goodpractices.html">3.1.2</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.1.1/goodpractices.html">3.1.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.1.0/goodpractices.html">3.1.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.0.7/goodpractices.html">3.0.7</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.0.6/goodpractices.html">3.0.6</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.0.5/goodpractices.html">3.0.5</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.0.4/goodpractices.html">3.0.4</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.0.3/goodpractices.html">3.0.3</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.0.2/goodpractices.html">3.0.2</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.0.1/goodpractices.html">3.0.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/3.0.0/goodpractices.html">3.0.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/2.9.2/goodpractices.html">2.9.2</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/2.9.1/goodpractices.html">2.9.1</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/2.9.0/goodpractices.html">2.9.0</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/2.8.7/goodpractices.html">2.8.7</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/2.7.3/goodpractices.html">2.7.3</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/sphinx-removed-in/goodpractices.html">sphinx-removed-in</a></dd>
+        
+        
+        
+        <dd><a href="http://doc.pytest.org/en/features/goodpractices.html">features</a></dd>
+        
+        
+      </dl>
+      
+      
+
+      
+      
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="https://readthedocs.org/projects/pytest/downloads/pdf/latest/">PDF</a></dd>
+        
+        <dd><a href="https://readthedocs.org/projects/pytest/downloads/htmlzip/latest/">HTML</a></dd>
+        
+        <dd><a href="https://readthedocs.org/projects/pytest/downloads/epub/latest/">Epub</a></dd>
+        
+      </dl>
+      
+      
+
+      
+      <dl>
+        <!-- These are kept as relative links for internal installs that are http -->
+        <dt>On Read the Docs</dt>
+        <dd>
+          <a href="https://readthedocs.org/projects/pytest/">Project Home</a>
+        </dd>
+        <dd>
+          <a href="https://readthedocs.org/projects/pytest/builds/">Builds</a>
+        </dd>
+        <dd>
+          <a href="https://readthedocs.org/projects/pytest/downloads/">Downloads</a>
+        </dd>
+      </dl>
+      
+
+      
+
+      
+      <dl>
+        <dt>On GitHub</dt>
+        <dd>
+          <a href="https://github.com/pytest-dev/pytest/blob/master/doc/en/goodpractices.rst">View</a>
+        </dd>
+        
+      </dl>
+      
+      
+
+      
+      <dl>
+        <dt>Search</dt>
+        <dd>
+          <div style="padding: 6px;">
+            <form id="flyout-search-form" class="wy-form" target="_blank" action="https://readthedocs.org/projects/pytest/search/" method="get">
+              <input type="text" name="q" placeholder="Search docs">
+              </form>
+          </div>
+        </dd>
+      </dl>
+      
+
+
+
+      <hr>
+      
+        <small>
+          <span>Hosted by <a href="https://readthedocs.org/">Read the Docs</a></span>
+          <span> · </span>
+          <a href="https://docs.readthedocs.io/en/latest/privacy-policy.html">Privacy Policy</a>
+        </small>
+      
+
+      
+    </div>
+  </div>
+  
+
+</div>
+</body></html>

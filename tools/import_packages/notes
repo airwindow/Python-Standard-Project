@@ -1,0 +1,35 @@
+1. Use '.' for importing relative modules is a much more elegant way to refer packages
+E: from ..module2.print_funs import print_sth
+
+
+2. Pytest could automatically discover all packages when it was called properly, therefore no need to specially include '.' when writing test cases.
+E: As shown in the below tree, coolPro contains the 'real' source code. one of the important folder is app folder, we usually create a tests folder beside such folder. In tests, we could directly import moduels from app through,
+
+
+Python-standard-project
+├── coolPro
+│   ├── app
+│   │   ├── module1
+│   │   │   └── test_print_funs.py
+│   │   └── module2
+│   │       └── print_funs.py
+│   └── tests
+│       └── test_print_module.py
+└── tools
+
+
+from coolPro.app.module2.print_funs import print_sth
+def test_print_fun():
+	print_sth('hello from pytest')
+
+
+Note: to allow Pytest to automatically discover related modules, we should invoke Pytest in following ways.
+2.1 if we want to execute all test functions under 'Python-standard-project'
+pwd
+~/Python-standard-project
+pytest coolPro
+
+2.2 if we only want to execute test functions in 'tests' folder, but still want test files to import related modules properly. 
+pwd
+~/Python-standard-project
+pytest coolPro/tests
