@@ -10,4 +10,7 @@ def test_equal_to_two(x=2):
 	assert 1 == x
 
 def test_equal_to_three(x=3):
-	assert 1 == 3
+	assert 1 == x
+
+def test_equal_to_four(x=4):
+	assert 1 == x
