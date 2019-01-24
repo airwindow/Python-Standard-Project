@@ -1,0 +1,48 @@
+.subscr_thanks_opacity_layer {
+    position: fixed;
+    background: rgba(0, 0, 0, .5);
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.subscr_thanks_popup {
+    background: #ffffff;
+    border-radius: 4px;
+    text-align: center;
+    padding: 30px 40px;
+    position: relative;
+    max-width: 95%;
+}
+
+.subscr_thanks_title {
+    font-family: "Averta SemiBold", sans-serif;
+    font-size: 24px;
+}
+
+.subscr_thanks_text {
+    font-size: 19px;
+    margin: 15px 0;
+    max-width: 290px;
+}
+
+.subscr_thanks_image_holder img {
+    vertical-align: middle;
+    max-width: 100%;
+}
+
+.subscr_close_popup {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 30px;
+    font-family: "Averta SemiBold", sans-serif;
+    color: #4a4a62;
+    width: 30px;
+    cursor: pointer;
+}

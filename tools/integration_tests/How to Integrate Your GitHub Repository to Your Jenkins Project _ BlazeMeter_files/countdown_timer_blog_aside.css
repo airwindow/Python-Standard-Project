@@ -1,0 +1,107 @@
+.new_blog_aside_start_testing.tm_black_friday,
+#blogs_top_banner.tm_black_friday{
+    background: #1e1436;
+}
+
+.new_blog_aside_start_testing.tm_black_friday{
+    padding: 55px 7% !important;
+}
+
+.timer_holder {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
+    max-width: 155px;
+    margin: 20px auto 0;
+}
+
+.colon {
+    position: absolute;
+    right: -10px;
+    bottom: -9px;
+    font-size: 36px;
+}
+
+.bf_get_ready_button,
+#new_blog_aside_holder .bf_get_ready_button{
+    background: -moz-linear-gradient(180deg, #e42626, #dc1e2e);
+    background: -webkit-gradient(linear, top top, bottom bottom, color-stop(#e42626), color-stop(#dc1e2e));
+    background: -webkit-linear-gradient(180deg, #e42626, #dc1e2e);
+    background: -o-linear-gradient(180deg, #e42626, #dc1e2e);
+    background: -ms-linear-gradient(180deg, #e42626, #dc1e2e);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e42626', endColorstr='#dc1e2e', GradientType=0);
+    background: linear-gradient(180deg, #e42626, #dc1e2e);
+    color: #ffffff;
+    font-family: "Averta SemiBold", sans-serif !important;
+    font-size: 20px;
+    border-radius: 3px;
+    padding: 8px 17px !important;
+    display: inline-block !important;
+}
+
+.bf_get_ready_button:hover,
+#new_blog_aside_holder .bf_get_ready_button:hover{
+    background: -moz-linear-gradient(180deg, #f42626, #ec1e2e);
+    background: -webkit-gradient(linear, top top, bottom bottom, color-stop(#f42626), color-stop(#ec1e2e));
+    background: -webkit-linear-gradient(180deg, #f42626, #ec1e2e);
+    background: -o-linear-gradient(180deg, #f42626, #ec1e2e);
+    background: -ms-linear-gradient(180deg, #f42626, #ec1e2e);
+}
+
+#new_blog_aside_holder .bf_get_ready_button_holder {
+    margin: 10px 0 0;
+}
+
+.number_holder {
+    position: relative;
+}
+
+.timer_text {
+    font-size: 10px !important;
+    font-family: "Averta", sans-serif !important;
+}
+
+.number {
+    font-family: "Averta Light", sans-serif !important;
+    font-size: 36px !important;
+}
+
+.tm_black_friday_link,
+.tm_black_friday_link:hover{
+    background: none !important;
+    font-family: "Averta", sans-serif !important;
+}
+
+#new_blog_menu .tm_black_friday a {
+    padding: 0;
+    display: inline-block;
+}
+
+#blogs_top_banner.tm_black_friday .timer_holder {
+    margin: 5px auto 0;
+    max-width: 350px;
+}
+
+#blogs_top_banner.tm_black_friday .number {
+    font-size: 56px !important;
+}
+
+#blogs_top_banner.tm_black_friday .timer_text {
+    font-size: 13px !important;
+}
+
+#blogs_top_banner.tm_black_friday .colon {
+    right: -12px;
+    bottom: 0;
+    font-size: 56px;
+}
+
+#blogs_top_banner.tm_black_friday {
+    padding: 25px !important;
+}
+
+#black_friday_logo img {
+    max-width: 100%;
+    vertical-align: middle;
+}

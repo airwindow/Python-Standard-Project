@@ -1,0 +1,45 @@
+Setup Webhook for Jenkins
+https://www.blazemeter.com/blog/how-to-integrate-your-github-repository-to-your-jenkins-project
+
+Persist no-transient data in volumn
+https://docs.docker.com/storage/
+https://stackoverflow.com/questions/44426112/all-job-data-lost-when-running-jenkins-in-docker-and-when-jenkins-container-is-s
+
+
+adduser jenkins
+usermod -a -G docker jenkins
+su jenkins
+mkdir data
+docker run -p 8080:8080 -p 50000:50000 -v /home/jenkins/container_data:/var/jenkins_home jenkins/jenkins
+
+
+SSH into container
+docker exec -it jenkins bash
+cat var/jenkins_home/secrets/initialAdminPassword
+or (directly through the mounted files)
+cat /home/jenkins/data/secrets/initialAdminPassword
+
+
+Remove image & volume
+docker volume ls
+docker volume remove -f  volume-ID
+
+docker image ls
+docker image remove -f  image-ID
+
+
+Ref
+Solving Docker permission denied while trying to connect to the Docker daemon socket
+https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
+
+deluser jenkins sudo
+https://askubuntu.com/questions/80115/how-to-remove-a-user-from-a-group
+
+docker image & volume management
+https://www.tecmint.com/remove-docker-images-containers-and-volumes/
+
+Github Webhook undeliverable error (notice tailing backslash)
+https://stackoverflow.com/questions/49848884/github-webhook-with-jenkins-return-302-notfound
+
+Notice the tailing '/'
+http://xxx.xxx.225.18:8080/github-webhook/
